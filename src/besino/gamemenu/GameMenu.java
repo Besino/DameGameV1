@@ -1,4 +1,4 @@
-package besino.game;
+package besino.gamemenu;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

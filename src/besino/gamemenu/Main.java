@@ -1,4 +1,4 @@
-package besino.game;
+package besino.gamemenu;
 
 public class Main {
 

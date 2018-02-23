@@ -1,10 +1,8 @@
-package besino.game;
+package besino.gamemenu;
 
-import javafx.animation.FadeTransition;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
 
 
@@ -16,10 +14,10 @@ public class MenuRegister extends Parent {
         VBox menu0 = new VBox(10);
         VBox menu1 = new VBox(10);
 
-        menu0.setTranslateX(100);
-        menu0.setTranslateY(200);
+        menu0.setTranslateX(530);
+        menu0.setTranslateY(350);
 
-        menu1.setTranslateX(100);
+        menu1.setTranslateX(400);
         menu1.setTranslateY(200);
 
         MenuButton btnStart = new MenuButton("Start Game");
