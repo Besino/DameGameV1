@@ -17,10 +17,14 @@ public class MenuRegister extends Parent {
         menu0.setTranslateX(530);
         menu0.setTranslateY(350);
 
-        menu1.setTranslateX(400);
-        menu1.setTranslateY(200);
+        menu1.setTranslateX(530);
+        menu1.setTranslateY(350);
 
         MenuButton btnStart = new MenuButton("Start Game");
+        btnStart.setOnMouseClicked(event -> {
+            getChildren().removeAll(menu0);
+            getChildren().addAll(menu1);
+        });
         //FadeTransition ft = new FadeTransition(Duration.seconds(0.5), this);
        // ft.setFromValue(1);
        // ft.setToValue(0);
@@ -32,12 +36,22 @@ public class MenuRegister extends Parent {
             System.exit(0);
         });
 
+        MenuButton btnVsComputer = new MenuButton("vs Computer");
+        btnVsComputer.setOnMouseClicked(event -> {
+
+        });
+
+        MenuButton btnVsHuman = new MenuButton("2 Player Mode");
+        btnVsHuman.setOnMouseClicked(event -> {
+
+        });
+
         menu0.getChildren().addAll(btnStart, btnQuit);
+        menu1.getChildren().addAll(btnVsComputer, btnVsHuman);
         Rectangle bg = new Rectangle(800,600);
         bg.setFill(Color.GRAY);
         bg.setOpacity(0.4);
         getChildren().addAll(bg, menu0);
+
     }
-
-
 }

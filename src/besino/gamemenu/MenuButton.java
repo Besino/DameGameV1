@@ -18,9 +18,9 @@ public class MenuButton extends StackPane {
         text.setFont(this.text.getFont().font(20));
         text.setFill(Color.WHITE);
 
-            Rectangle bg = new Rectangle(250, 30);
+            Rectangle bg = new Rectangle(200, 30);
             bg.setOpacity(0.6);
-            bg.setFill(Color.BLACK);
+            bg.setFill(Color.HOTPINK);
 
             GaussianBlur blur = new GaussianBlur(3.5);
             bg.setEffect(blur);
@@ -33,13 +33,13 @@ public class MenuButton extends StackPane {
                 bg.setTranslateX(10);
                 text.setTranslateX(10);
                 bg.setFill(Color.WHITE);
-                text.setFill(Color.BLACK);
+                text.setFill(Color.DARKGREY);
             });
 
             setOnMouseExited(event -> {
                 bg.setTranslateX(0);
                 text.setTranslateX(0);
-                bg.setFill(Color.BLACK);
+                bg.setFill(Color.HOTPINK);
                 text.setFill(Color.BLACK);
             });
 
