@@ -14,12 +14,13 @@ import java.nio.file.Paths;
 public class GameMenu extends Application {
 
     private MenuRegister register;
+    private Scene scene;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         Pane root = new Pane();
-        root.setPrefSize(800,600);
+        root.setPrefSize(600,600);
 
         InputStream is = Files.newInputStream(Paths.get("res/images/background.png"));
         Image img = new Image(is);
@@ -27,16 +28,17 @@ public class GameMenu extends Application {
 
         ImageView imgView = new ImageView(img);
         imgView.setFitHeight(600);
-        imgView.setFitWidth(800);
+        imgView.setFitWidth(600);
 
         register = new MenuRegister();
 
         root.getChildren().addAll(imgView, register);
 
-        Scene scene = new Scene(root);
+        scene = new Scene(root);
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     public static void main(String[] args){

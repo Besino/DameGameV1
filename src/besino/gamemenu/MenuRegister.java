@@ -1,23 +1,29 @@
 package besino.gamemenu;
 
+import besino.gamebord.GameBord;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
 
 
 public class MenuRegister extends Parent {
 
-    final int offset = 400;
+    final int offset = 380;
+    private Scene scene2;
 
     public MenuRegister(){
         VBox menu0 = new VBox(10);
         VBox menu1 = new VBox(10);
 
-        menu0.setTranslateX(530);
+        menu0.setTranslateX(offset);
         menu0.setTranslateY(350);
 
-        menu1.setTranslateX(530);
+        menu1.setTranslateX(offset);
         menu1.setTranslateY(350);
 
         MenuButton btnStart = new MenuButton("Start Game");
@@ -38,7 +44,12 @@ public class MenuRegister extends Parent {
 
         MenuButton btnVsComputer = new MenuButton("vs Computer");
         btnVsComputer.setOnMouseClicked(event -> {
-
+            getChildren().removeAll(menu1);
+            Pane root2 = new Pane();
+            GameBord gameBord = new GameBord();
+            root2.setPrefSize(600,600);
+            root2.getChildren().addAll(gameBord);
+            scene2 = new Scene(root2);
         });
 
         MenuButton btnVsHuman = new MenuButton("2 Player Mode");
@@ -48,7 +59,7 @@ public class MenuRegister extends Parent {
 
         menu0.getChildren().addAll(btnStart, btnQuit);
         menu1.getChildren().addAll(btnVsComputer, btnVsHuman);
-        Rectangle bg = new Rectangle(800,600);
+        Rectangle bg = new Rectangle(600,600);
         bg.setFill(Color.GRAY);
         bg.setOpacity(0.4);
         getChildren().addAll(bg, menu0);

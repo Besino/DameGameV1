@@ -25,13 +25,13 @@ public class MenuButton extends StackPane {
             GaussianBlur blur = new GaussianBlur(3.5);
             bg.setEffect(blur);
 
-            setAlignment(Pos.CENTER_LEFT);
+            setAlignment(Pos.CENTER);
             setRotate(-0.5);
             getChildren().addAll(bg, text);
 
             setOnMouseEntered(event -> {
-                bg.setTranslateX(10);
-                text.setTranslateX(10);
+                bg.setTranslateX(2);
+                text.setTranslateX(2);
                 bg.setFill(Color.WHITE);
                 text.setFill(Color.DARKGREY);
             });
@@ -43,7 +43,7 @@ public class MenuButton extends StackPane {
                 text.setFill(Color.BLACK);
             });
 
-                    DropShadow drop = new DropShadow(50, Color.WHITE);
+                    DropShadow drop = new DropShadow(10, Color.WHITE);
                     drop.setInput(new Glow());
 
             setOnMousePressed(event -> setEffect(drop));
