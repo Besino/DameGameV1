@@ -1,13 +1,14 @@
 package besino.gamemenu;
 
 import besino.gamebord.GameBord;
+import besino.spielerZeugs.Player;
+import besino.spielerZeugs.PlayerType;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 
 
@@ -31,27 +32,27 @@ public class MenuRegister extends Parent {
             getChildren().removeAll(menu0);
             getChildren().addAll(menu1);
         });
-        //FadeTransition ft = new FadeTransition(Duration.seconds(0.5), this);
-       // ft.setFromValue(1);
-       // ft.setToValue(0);
-       // ft.setOnFinished(evt -> this.setVisible(false));
-       // ft.play();
 
         MenuButton btnQuit = new MenuButton("Quit Game");
         btnQuit.setOnMouseClicked(event -> {
             System.exit(0);
         });
 
-        MenuButton btnVsComputer = new MenuButton("vs Computer");
+        MenuButton btnVsComputer = new MenuButton("vs Computer Mode");
         btnVsComputer.setOnMouseClicked(event -> {
             getChildren().removeAll(menu1);
-            gameBord = new GameBord();
+            Player player1 = new Player(PlayerType.HUMAN);
+            Player player2 = new Player(PlayerType.COMPUTER);
+            gameBord = new GameBord(player1,player2);
             getChildren().addAll(gameBord);
         });
 
         MenuButton btnVsHuman = new MenuButton("2 Player Mode");
         btnVsHuman.setOnMouseClicked(event -> {
-
+            Player player1 = new Player(PlayerType.HUMAN);
+            Player player2 = new Player(PlayerType.HUMAN);
+            gameBord = new GameBord(player1,player2);
+            getChildren().addAll(gameBord);
         });
 
         menu0.getChildren().addAll(btnStart, btnQuit);

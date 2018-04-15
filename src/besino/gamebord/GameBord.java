@@ -1,5 +1,6 @@
 package besino.gamebord;
 
+import besino.spielerZeugs.Player;
 import besino.spielzugRules.ZugResultat;
 import besino.spielzugRules.ZugTyp;
 import javafx.scene.Group;
@@ -15,32 +16,13 @@ public class GameBord extends Parent {
     private Group gamefeldGroup = new Group();
     private Group spielsteinGroup = new Group();
     private GameFeld[][] brett = new GameFeld[WIDTH][HEIGHT];
+    private Player player1;
+    private Player player2;
 
-    private ZugResultat tryMove(Spielstein spielstein, int newX, int newY){
-        if(brett[newX][newY].hatStein() || (newX + newY) % 2 == 0){
-            return new ZugResultat(ZugTyp.KEIN);
-        }
-        int x0 = zuBrett(spielstein.getOldX());
-        int y0 = zuBrett(spielstein.getOldY());
+    public GameBord(Player player1, Player player2){
 
-        if(Math.abs(newX-x0) == 1 && newY-y0 == spielstein.getSteinTyp().moveDir){
-            return new ZugResultat(ZugTyp.NORMAL);
-        } else if(Math.abs(newX-x0) == 2 && newY-y0 == spielstein.getSteinTyp().moveDir * 2){
-            int x1 = x0 + (newX - x0)/2;
-            int y1 = y0 + (newY - y0)/2;
-            if(brett[x1][y1].hatStein() &&
-                    brett[x1][y1].getSpielstein().getSteinTyp() != spielstein.getSteinTyp()){
-                return new ZugResultat(ZugTyp.KILL,brett[x1][y1].getSpielstein());
-            }
-        }
-        return new ZugResultat(ZugTyp.KEIN);
-    }
-
-    private int zuBrett (double pixel){
-        return (int)(pixel + FELD_GROESSE/2) / FELD_GROESSE;
-    }
-
-    public GameBord(){
+        this.player1 = player1;
+        this.player2 = player2;
 
         for (int y = 0; y < HEIGHT; y++){
             for (int x = 0; x < WIDTH; x++){
@@ -103,5 +85,28 @@ public class GameBord extends Parent {
         });
 
         return spielstein;
+    }
+    private ZugResultat tryMove(Spielstein spielstein, int newX, int newY){
+        if(brett[newX][newY].hatStein() || (newX + newY) % 2 == 0){
+            return new ZugResultat(ZugTyp.KEIN);
+        }
+        int x0 = zuBrett(spielstein.getOldX());
+        int y0 = zuBrett(spielstein.getOldY());
+
+        if(Math.abs(newX-x0) == 1 && newY-y0 == spielstein.getSteinTyp().moveDir){
+            return new ZugResultat(ZugTyp.NORMAL);
+        } else if(Math.abs(newX-x0) == 2 && newY-y0 == spielstein.getSteinTyp().moveDir * 2){
+            int x1 = x0 + (newX - x0)/2;
+            int y1 = y0 + (newY - y0)/2;
+            if(brett[x1][y1].hatStein() &&
+                    brett[x1][y1].getSpielstein().getSteinTyp() != spielstein.getSteinTyp()){
+                return new ZugResultat(ZugTyp.KILL,brett[x1][y1].getSpielstein());
+            }
+        }
+        return new ZugResultat(ZugTyp.KEIN);
+    }
+
+    private int zuBrett (double pixel){
+        return (int)(pixel + FELD_GROESSE/2) / FELD_GROESSE;
     }
 }
