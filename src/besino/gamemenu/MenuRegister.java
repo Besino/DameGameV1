@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 public class MenuRegister extends Parent {
 
     final int offset = 380;
-    private Scene scene2;
+    private GameBord gameBord;
 
     public MenuRegister(){
         VBox menu0 = new VBox(10);
@@ -45,11 +45,8 @@ public class MenuRegister extends Parent {
         MenuButton btnVsComputer = new MenuButton("vs Computer");
         btnVsComputer.setOnMouseClicked(event -> {
             getChildren().removeAll(menu1);
-            Pane root2 = new Pane();
-            GameBord gameBord = new GameBord();
-            root2.setPrefSize(600,600);
-            root2.getChildren().addAll(gameBord);
-            scene2 = new Scene(root2);
+            gameBord = new GameBord();
+            getChildren().addAll(gameBord);
         });
 
         MenuButton btnVsHuman = new MenuButton("2 Player Mode");
@@ -65,4 +62,5 @@ public class MenuRegister extends Parent {
         getChildren().addAll(bg, menu0);
 
     }
+
 }
