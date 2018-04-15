@@ -12,7 +12,7 @@ public class GameFeld extends Rectangle {
         setHeight(GameBord.FELD_GROESSE);
         relocate(x * GameBord.FELD_GROESSE, y * GameBord.FELD_GROESSE);
 
-        setFill(farbe ? Color.valueOf("#005500") : Color.valueOf("FF00FF"));
+        setFill(farbe ? Color.valueOf("#000000") : Color.valueOf("FF00FF"));
     }
 
     public boolean hatStein(){
