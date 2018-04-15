@@ -3,6 +3,9 @@ package besino.gamebord;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import static besino.gamebord.GameBord.FELD_GROESSE;
 
 public class Spielstein extends StackPane {
@@ -16,15 +19,21 @@ public class Spielstein extends StackPane {
 
         move(x,y);
 
-        Ellipse ellipse = new Ellipse(FELD_GROESSE * 0.3124, FELD_GROESSE * 0.3124);
-        ellipse.setFill(steinTyp == SteinTyp.WEISS ? Color.valueOf("#fff9f4") : Color.valueOf("#000000"));
-        ellipse.setStroke(Color.BLACK);
-        ellipse.setStrokeWidth(FELD_GROESSE * 0.03);
+        switch(steinTyp){
+            case WEISS:
+                createEllipse(Color.WHITE);
+                break;
+            case SCHWARZ:
+                createEllipse(Color.BLACK);
+                break;
+            case DAMEWEISS:
+                createEllipse(Color.CORAL);
+                break;
+            case DAMESCHWARZ:
+                createEllipse(Color.DARKGREY);
+                break;
+        }
 
-        ellipse.setTranslateX((FELD_GROESSE - (FELD_GROESSE*0.3124*2))/2);
-        ellipse.setTranslateY((FELD_GROESSE - (FELD_GROESSE*0.3124*2))/2);
-
-        getChildren().addAll(ellipse);
 
         setOnMousePressed( event -> {
             mouseX = event.getSceneX();
@@ -55,8 +64,17 @@ public class Spielstein extends StackPane {
         return oldY;
     }
 
-    public void dontmove(){
-        relocate(oldX,oldY);
-    }
+    public void dontmove(){ relocate(oldX,oldY);}
 
+    public void createEllipse(Color color){
+        Ellipse ellipse = new Ellipse(FELD_GROESSE * 0.3124, FELD_GROESSE * 0.3124);
+        ellipse.setFill(color);
+        ellipse.setStroke(Color.BLACK);
+        ellipse.setStrokeWidth(FELD_GROESSE * 0.03);
+
+        ellipse.setTranslateX((FELD_GROESSE - (FELD_GROESSE*0.3124*2))/2);
+        ellipse.setTranslateY((FELD_GROESSE - (FELD_GROESSE*0.3124*2))/2);
+
+        getChildren().addAll(ellipse);
+    }
 }
