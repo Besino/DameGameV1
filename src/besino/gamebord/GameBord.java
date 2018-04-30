@@ -1,10 +1,17 @@
 package besino.gamebord;
 
+import besino.gamemenu.MenuButton;
 import besino.spielerZeugs.Player;
 import besino.spielzugRules.ZugResultat;
 import besino.spielzugRules.ZugTyp;
+import besino.winnermessage.WinnerMessageBox;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.layout.VBox;
+
+import java.awt.*;
+import java.util.Collection;
 
 
 public class GameBord extends Parent {
@@ -14,7 +21,8 @@ public class GameBord extends Parent {
     public static final int HEIGHT = 8;
 
     private Group gamefeldGroup = new Group();
-    private Group spielsteinGroup = new Group();
+    private Group spielsteinweissGroup = new Group();
+    private Group spielsteinschwarzGroup = new Group();
     private GameFeld[][] brett = new GameFeld[WIDTH][HEIGHT];
     private Player player1;
     private Player player2;
@@ -25,7 +33,7 @@ public class GameBord extends Parent {
         this.player2 = player2;
 
         setUpSpiel();
-        getChildren().addAll(gamefeldGroup,spielsteinGroup);
+        getChildren().addAll(gamefeldGroup,spielsteinweissGroup, spielsteinschwarzGroup);
 
     }
 
@@ -58,15 +66,20 @@ public class GameBord extends Parent {
 
                     Spielstein gegnerStein = resultat.getSpielstein();
                     brett[zuBrett(gegnerStein.getOldX())][zuBrett(gegnerStein.getOldY())].setSpielstein(null);
-                    spielsteinGroup.getChildren().remove(gegnerStein);
+                    if(gegnerStein.getSteinTyp() == SteinTyp.WEISS || gegnerStein.getSteinTyp() == SteinTyp.DAMEWEISS){
+                    spielsteinweissGroup.getChildren().remove(gegnerStein);}
+                    else {
+                    spielsteinschwarzGroup.getChildren().remove(gegnerStein);
+                    }
+                    pruefeSieg();
                     break;
                 case WANDLEDAMEWEISS:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
                     Spielstein damensteinweiss = new Spielstein(SteinTyp.DAMEWEISS,newX,newY);
                     brett[newX][newY].setSpielstein(damensteinweiss);
-                    spielsteinGroup.getChildren().remove(spielstein);
-                    spielsteinGroup.getChildren().add(damensteinweiss);
+                    spielsteinweissGroup.getChildren().remove(spielstein);
+                    spielsteinweissGroup.getChildren().add(damensteinweiss);
                     break;
                 case KILLUNDWANDLEWEISS:
                     spielstein.move(newX,newY);
@@ -75,17 +88,18 @@ public class GameBord extends Parent {
                     Spielstein gegnerStein2 = resultat.getSpielstein();
                     brett[zuBrett(gegnerStein2.getOldX())][zuBrett(gegnerStein2.getOldY())].setSpielstein(null);
                     brett[newX][newY].setSpielstein(dameweiss);
-                    spielsteinGroup.getChildren().remove(spielstein);
-                    spielsteinGroup.getChildren().add(dameweiss);
-                    spielsteinGroup.getChildren().remove(gegnerStein2);
+                    spielsteinweissGroup.getChildren().remove(spielstein);
+                    spielsteinweissGroup.getChildren().add(dameweiss);
+                    spielsteinschwarzGroup.getChildren().remove(gegnerStein2);
+                    pruefeSieg();
                     break;
                 case WANDLEDAMESCHWARZ:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
                     Spielstein damensteinschwarz = new Spielstein(SteinTyp.DAMESCHWARZ,newX,newY);
                     brett[newX][newY].setSpielstein(damensteinschwarz);
-                    spielsteinGroup.getChildren().remove(spielstein);
-                    spielsteinGroup.getChildren().add(damensteinschwarz);
+                    spielsteinschwarzGroup.getChildren().remove(spielstein);
+                    spielsteinschwarzGroup.getChildren().add(damensteinschwarz);
                     break;
                 case KILLUNDWANDLESCHWARZ:
                     spielstein.move(newX,newY);
@@ -94,9 +108,10 @@ public class GameBord extends Parent {
                     Spielstein gegnerStein3 = resultat.getSpielstein();
                     brett[zuBrett(gegnerStein3.getOldX())][zuBrett(gegnerStein3.getOldY())].setSpielstein(null);
                     brett[newX][newY].setSpielstein(dameschwarz);
-                    spielsteinGroup.getChildren().remove(spielstein);
-                    spielsteinGroup.getChildren().add(dameschwarz);
-                    spielsteinGroup.getChildren().remove(gegnerStein3);
+                    spielsteinschwarzGroup.getChildren().remove(spielstein);
+                    spielsteinschwarzGroup.getChildren().add(dameschwarz);
+                    spielsteinweissGroup.getChildren().remove(gegnerStein3);
+                    pruefeSieg();
                     break;
 
             }
@@ -178,16 +193,56 @@ public class GameBord extends Parent {
 
                 if(y <= 2 && (x+y)%2!=0){
                     spielstein = erstelleSpielstein(SteinTyp.WEISS,x,y);
+                    spielsteinweissGroup.getChildren().add(spielstein);
                 }
 
                 if(y >= 5 && (x+y)%2!=0){
                     spielstein = erstelleSpielstein(SteinTyp.SCHWARZ,x,y);
+                    spielsteinschwarzGroup.getChildren().add(spielstein);
                 }
                 if(spielstein != null) {
                     gameFeld.setSpielstein(spielstein);
-                    spielsteinGroup.getChildren().add(spielstein);
                 }
             }
+        }
+    }
+    private void pruefeSieg(){
+        if(spielsteinschwarzGroup.getChildren().isEmpty()){
+            System.out.println("Weiss Gewinnt das Spiel");
+            VBox winnerbox = new VBox(10);
+            winnerbox.setTranslateX(70);
+            winnerbox.setTranslateY(250);
+
+            WinnerMessageBox winnermessage = new WinnerMessageBox("Weiss Gewinnt, danke fürs Spielen");
+
+            MenuButton btnQuit = new MenuButton("Quit Game");
+
+            btnQuit.setOnMouseClicked(event -> {
+                System.exit(0);
+            });
+
+            winnerbox.getChildren().addAll(winnermessage, btnQuit);
+
+            getChildren().addAll(winnerbox);
+
+        }
+        if(spielsteinweissGroup.getChildren().isEmpty()){
+            System.out.println("Schwarz Gewinnt das Spiel");
+
+            VBox winnerbox = new VBox(10);
+            winnerbox.setTranslateX(70);
+            winnerbox.setTranslateY(250);
+
+            WinnerMessageBox winnermessage = new WinnerMessageBox("Schwarz Gewinnt, danke fürs Spielen");
+
+            MenuButton btnQuit = new MenuButton("Quit Game");
+            btnQuit.setOnMouseClicked(event -> {
+                System.exit(0);
+            });
+
+            winnerbox.getChildren().addAll(winnermessage, btnQuit);
+
+            getChildren().addAll(winnerbox);
         }
     }
 }
