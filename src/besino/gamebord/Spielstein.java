@@ -27,10 +27,10 @@ public class Spielstein extends StackPane {
                 createEllipse(Color.BLACK);
                 break;
             case DAMEWEISS:
-                createEllipse(Color.CORAL);
+                createEllipse(Color.LIGHTBLUE);
                 break;
             case DAMESCHWARZ:
-                createEllipse(Color.DARKGREY);
+                createEllipse(Color.GREEN);
                 break;
         }
 
