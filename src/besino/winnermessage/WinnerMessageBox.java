@@ -7,15 +7,15 @@ import javafx.scene.effect.Glow;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class WinnerMessageBox extends StackPane {
 
-    private Text text;
-
     public WinnerMessageBox(String name){
-        this.text = new Text(name);
-        text.setFont(this.text.getFont().font(28));
+        Text text = new Text(name);
+        text.getFont();
+        text.setFont(Font.font(28));
         text.setFill(Color.WHITE);
 
             Rectangle bg = new Rectangle(500, 150);
