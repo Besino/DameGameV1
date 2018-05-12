@@ -126,7 +126,7 @@ public class GameBord extends Parent {
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
                     brett[newX][newY].setSpielstein(spielstein);
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
 
             }
         });
