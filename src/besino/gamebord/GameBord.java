@@ -49,7 +49,7 @@ public class GameBord extends Parent {
             switch (resultat.getZugTyp()){
 
                 case KEIN:
-                    spielstein.dontmove();
+                    spielstein.doNotMove();
                     break;
                 case NORMALWEISS:
                     spielstein.move(newX,newY);

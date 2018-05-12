@@ -12,7 +12,7 @@ public class Spielstein extends StackPane {
     private double mouseX, mouseY;
     private double oldX, oldY;
 
-    public Spielstein (SteinTyp steinTyp, int x, int y){
+    Spielstein(SteinTyp steinTyp, int x, int y){
         this.steinTyp = steinTyp;
 
         move(x,y);
@@ -38,33 +38,31 @@ public class Spielstein extends StackPane {
             mouseY = event.getSceneY();
         });
 
-        setOnMouseDragged( event -> {
-            relocate(event.getSceneX() - mouseX + oldX, event.getSceneY() - mouseY + oldY);
-        });
+        setOnMouseDragged( event -> relocate(event.getSceneX() - mouseX + oldX, event.getSceneY() - mouseY + oldY));
 
     }
 
-    public void move(int x, int y){
+    void move(int x, int y){
         oldX = x * FELD_GROESSE;
         oldY = y * FELD_GROESSE;
         relocate(oldX,oldY);
     }
 
-    public SteinTyp getSteinTyp(){
+    SteinTyp getSteinTyp(){
         return steinTyp;
     }
 
-    public double getOldX(){
+    double getOldX(){
         return oldX;
     }
 
-    public double getOldY(){
+    double getOldY(){
         return oldY;
     }
 
-    public void dontmove(){ relocate(oldX,oldY);}
+    void doNotMove(){ relocate(oldX,oldY);}
 
-    public void createEllipse(Color color){
+    private void createEllipse(Color color){
         Ellipse ellipse = new Ellipse(FELD_GROESSE * 0.3124, FELD_GROESSE * 0.3124);
         ellipse.setFill(color);
         ellipse.setStroke(Color.BLACK);

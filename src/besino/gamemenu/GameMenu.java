@@ -13,9 +13,6 @@ import java.nio.file.Paths;
 
 public class GameMenu extends Application {
 
-    private MenuRegister register;
-    private Scene scene;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -30,11 +27,11 @@ public class GameMenu extends Application {
         imgView.setFitHeight(600);
         imgView.setFitWidth(600);
 
-        register = new MenuRegister();
+        MenuRegister register = new MenuRegister();
 
         root.getChildren().addAll(imgView, register);
 
-        scene = new Scene(root);
+        Scene scene = new Scene(root);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Unicorn Dame");

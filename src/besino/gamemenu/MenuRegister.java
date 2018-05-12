@@ -12,13 +12,13 @@ import javafx.scene.shape.Rectangle;
 
 class MenuRegister extends Parent {
 
-    private final int offset = 380;
     private GameBord gameBord;
 
     MenuRegister(){
         VBox menu0 = new VBox(10);
         VBox menu1 = new VBox(10);
 
+        int offset = 380;
         menu0.setTranslateX(offset);
         menu0.setTranslateY(350);
 
