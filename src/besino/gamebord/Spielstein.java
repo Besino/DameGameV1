@@ -4,8 +4,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
-import java.util.concurrent.CopyOnWriteArraySet;
-
 import static besino.gamebord.GameBord.FELD_GROESSE;
 
 public class Spielstein extends StackPane {

@@ -7,12 +7,10 @@ import besino.spielzugRules.ZugResultat;
 import besino.spielzugRules.ZugTyp;
 import besino.winnermessage.WinnerMessageBox;
 import javafx.scene.Group;
-import javafx.scene.Node;
+
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 
-import java.awt.*;
-import java.util.Collection;
 
 
 public class GameBord extends Parent {
@@ -86,7 +84,7 @@ public class GameBord extends Parent {
                 case WANDLEDAMEWEISS:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
-                    Spielstein damensteinweiss = new Spielstein(SteinTyp.DAMEWEISS,newX,newY);
+                    Spielstein damensteinweiss = erstelleSpielstein(SteinTyp.DAMEWEISS,newX,newY);
                     brett[newX][newY].setSpielstein(damensteinweiss);
                     spielsteinweissGroup.getChildren().remove(spielstein);
                     spielsteinweissGroup.getChildren().add(damensteinweiss);
@@ -95,7 +93,7 @@ public class GameBord extends Parent {
                 case KILLUNDWANDLEWEISS:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
-                    Spielstein dameweiss = new Spielstein(SteinTyp.DAMEWEISS,newX,newY);
+                    Spielstein dameweiss = erstelleSpielstein(SteinTyp.DAMEWEISS,newX,newY);
                     Spielstein gegnerStein2 = resultat.getSpielstein();
                     brett[zuBrett(gegnerStein2.getOldX())][zuBrett(gegnerStein2.getOldY())].setSpielstein(null);
                     brett[newX][newY].setSpielstein(dameweiss);
@@ -108,7 +106,7 @@ public class GameBord extends Parent {
                 case WANDLEDAMESCHWARZ:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
-                    Spielstein damensteinschwarz = new Spielstein(SteinTyp.DAMESCHWARZ,newX,newY);
+                    Spielstein damensteinschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ,newX,newY);
                     brett[newX][newY].setSpielstein(damensteinschwarz);
                     spielsteinschwarzGroup.getChildren().remove(spielstein);
                     spielsteinschwarzGroup.getChildren().add(damensteinschwarz);
@@ -117,7 +115,7 @@ public class GameBord extends Parent {
                 case KILLUNDWANDLESCHWARZ:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
-                    Spielstein dameschwarz = new Spielstein(SteinTyp.DAMESCHWARZ,newX,newY);
+                    Spielstein dameschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ,newX,newY);
                     Spielstein gegnerStein3 = resultat.getSpielstein();
                     brett[zuBrett(gegnerStein3.getOldX())][zuBrett(gegnerStein3.getOldY())].setSpielstein(null);
                     brett[newX][newY].setSpielstein(dameschwarz);
@@ -127,6 +125,11 @@ public class GameBord extends Parent {
                     pruefeSieg();
                     playcontrol.changeturn();
                     break;
+                case DAMEWEISSNORMAL:
+                    spielstein.move(newX,newY);
+                    brett[x0][y0].setSpielstein(null);
+                    brett[newX][newY].setSpielstein(spielstein);
+                    playcontrol.changeturn();
 
             }
         });
@@ -134,6 +137,7 @@ public class GameBord extends Parent {
         return spielstein;
     }
     private ZugResultat tryMove(Spielstein spielstein, int newX, int newY){
+        // nur Diagonale züge erlauben
         if(brett[newX][newY].hatStein() || (newX + newY) % 2 == 0){
             return new ZugResultat(ZugTyp.KEIN);
         }
@@ -142,6 +146,7 @@ public class GameBord extends Parent {
 
         boolean istweiss = (spielstein.getSteinTyp() == SteinTyp.WEISS);
         boolean istschwarz = (spielstein.getSteinTyp() == SteinTyp.SCHWARZ);
+        boolean istdameweiss = (SteinTyp.DAMEWEISS == spielstein.getSteinTyp());
         boolean normalzug = (Math.abs(newX-x0) == 1) && (newY-y0 == spielstein.getSteinTyp().moveDir);
         // normalzug für beide Steintypen für diagonales Bewegen in movedirektion für normale steine
         boolean normalwandlungsrestrict = (istweiss && (y0 != 6 )||istschwarz&&(y0 != 1));
@@ -149,31 +154,34 @@ public class GameBord extends Parent {
         boolean killzug = Math.abs(newX-x0) == 2 && newY-y0 == spielstein.getSteinTyp().moveDir * 2;
         // Killzug für beide Steintypen für diagonales Killen in movedirektion
         boolean killzugrestrict = ((istweiss && (y0 != 5 )||istschwarz &&(y0 != 2)));
-        if (!(playcontrol.getturn())) {
-            if (normalzug && normalwandlungsrestrict && istweiss) {
-                return new ZugResultat(ZugTyp.NORMALWEISS);
-            }
-            else if(istweiss && (y0 == 6) && normalzug){
-                return new ZugResultat(ZugTyp.WANDLEDAMEWEISS);
-            }
-            else if(killzug && istweiss && (y0 == 5)){
-                int x1 = x0 + (newX - x0)/2;
-                int y1 = y0 + (newY - y0)/2;
+        boolean damenormalzug = (Math.abs(newX-x0) == 1);
+        //  && Math.abs(newX-x0) >=-8 && Math.abs(newX-x0) <= 8 && Math.abs(newY-y0) <= -8 && Math.abs(newY-y0) <= 8);
 
-                if(brett[x1][y1].hatStein() &&
+        if (!(playcontrol.getturn()) && istweiss) {
+            if (normalzug && normalwandlungsrestrict) {
+                return new ZugResultat(ZugTyp.NORMALWEISS);
+            } else if ((y0 == 6) && normalzug) {
+                return new ZugResultat(ZugTyp.WANDLEDAMEWEISS);
+            } else if (killzug && (y0 == 5)) {
+                int x1 = x0 + (newX - x0) / 2;
+                int y1 = y0 + (newY - y0) / 2;
+
+                if (brett[x1][y1].hatStein() &&
                         brett[x1][y1].getSpielstein().getSteinTyp() != spielstein.getSteinTyp()) {
                     return new ZugResultat(ZugTyp.KILLUNDWANDLEWEISS, brett[x1][y1].getSpielstein());
                 }
-            }
-            else if(killzug && killzugrestrict && istweiss){
-                int x1 = x0 + (newX - x0)/2;
-                int y1 = y0 + (newY - y0)/2;
+            } else if (killzug && killzugrestrict) {
+                int x1 = x0 + (newX - x0) / 2;
+                int y1 = y0 + (newY - y0) / 2;
 
-                if(brett[x1][y1].hatStein() &&
-                        brett[x1][y1].getSpielstein().getSteinTyp() != spielstein.getSteinTyp()){
-                    return new ZugResultat(ZugTyp.KILL,brett[x1][y1].getSpielstein());
+                if (brett[x1][y1].hatStein() &&
+                        brett[x1][y1].getSpielstein().getSteinTyp() != spielstein.getSteinTyp()) {
+                    return new ZugResultat(ZugTyp.KILL, brett[x1][y1].getSpielstein());
                 }
             }
+        }
+        else if (istdameweiss && damenormalzug){
+            return new ZugResultat(ZugTyp.DAMEWEISSNORMAL);
         }
         else if (playcontrol.getturn()){
             if (normalzug && normalwandlungsrestrict && istschwarz){
