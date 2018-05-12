@@ -7,11 +7,8 @@ import besino.spielzugRules.ZugResultat;
 import besino.spielzugRules.ZugTyp;
 import besino.winnermessage.WinnerMessageBox;
 import javafx.scene.Group;
-
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
-
-
 
 public class GameBord extends Parent {
 
@@ -58,13 +55,13 @@ public class GameBord extends Parent {
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
                     brett[newX][newY].setSpielstein(spielstein);
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case NORMALSCHWARZ:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
                     brett[newX][newY].setSpielstein(spielstein);
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case KILL:
                     spielstein.move(newX,newY);
@@ -79,7 +76,7 @@ public class GameBord extends Parent {
                     spielsteinschwarzGroup.getChildren().remove(gegnerStein);
                     }
                     pruefeSieg();
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case WANDLEDAMEWEISS:
                     spielstein.move(newX,newY);
@@ -88,7 +85,7 @@ public class GameBord extends Parent {
                     brett[newX][newY].setSpielstein(damensteinweiss);
                     spielsteinweissGroup.getChildren().remove(spielstein);
                     spielsteinweissGroup.getChildren().add(damensteinweiss);
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case KILLUNDWANDLEWEISS:
                     spielstein.move(newX,newY);
@@ -101,7 +98,7 @@ public class GameBord extends Parent {
                     spielsteinweissGroup.getChildren().add(dameweiss);
                     spielsteinschwarzGroup.getChildren().remove(gegnerStein2);
                     pruefeSieg();
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case WANDLEDAMESCHWARZ:
                     spielstein.move(newX,newY);
@@ -110,7 +107,7 @@ public class GameBord extends Parent {
                     brett[newX][newY].setSpielstein(damensteinschwarz);
                     spielsteinschwarzGroup.getChildren().remove(spielstein);
                     spielsteinschwarzGroup.getChildren().add(damensteinschwarz);
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case KILLUNDWANDLESCHWARZ:
                     spielstein.move(newX,newY);
@@ -123,7 +120,7 @@ public class GameBord extends Parent {
                     spielsteinschwarzGroup.getChildren().add(dameschwarz);
                     spielsteinweissGroup.getChildren().remove(gegnerStein3);
                     pruefeSieg();
-                    playcontrol.changeturn();
+                    playcontrol.changeTurn();
                     break;
                 case DAMEWEISSNORMAL:
                     spielstein.move(newX,newY);
@@ -154,11 +151,11 @@ public class GameBord extends Parent {
         boolean killzug = Math.abs(newX-x0) == 2 && newY-y0 == spielstein.getSteinTyp().moveDir * 2;
         // Killzug für beide Steintypen für diagonales Killen in movedirektion
         boolean killzugrestrict = ((istweiss && (y0 != 5 )||istschwarz &&(y0 != 2)));
+      
         boolean damenormalzug = (Math.abs(newX-x0) == 1);
         //  && Math.abs(newX-x0) >=-8 && Math.abs(newX-x0) <= 8 && Math.abs(newY-y0) <= -8 && Math.abs(newY-y0) <= 8);
-
-        if (!(playcontrol.getturn()) && istweiss) {
-            if (normalzug && normalwandlungsrestrict) {
+        if (!(playcontrol.getTurn())) {
+            if (normalzug && normalwandlungsrestrict && istweiss) {        
                 return new ZugResultat(ZugTyp.NORMALWEISS);
             } else if ((y0 == 6) && normalzug) {
                 return new ZugResultat(ZugTyp.WANDLEDAMEWEISS);
@@ -183,7 +180,7 @@ public class GameBord extends Parent {
         else if (istdameweiss && damenormalzug){
             return new ZugResultat(ZugTyp.DAMEWEISSNORMAL);
         }
-        else if (playcontrol.getturn()){
+        else if (playcontrol.getTurn()){
             if (normalzug && normalwandlungsrestrict && istschwarz){
                 return new ZugResultat(ZugTyp.NORMALSCHWARZ);
             }

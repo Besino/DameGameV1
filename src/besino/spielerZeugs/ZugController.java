@@ -1,14 +1,12 @@
 package besino.spielerZeugs;
 
 public class ZugController {
-    Player spieler1;
-    Player spieler2;
-    boolean istvscomputer = false;
-    boolean schwarzistdran;
+    private boolean istvscomputer = false;
+    private boolean schwarzistdran;
 
     public ZugController(Player spieler1, Player spieler2){
-        this.spieler1 = spieler1;
-        this.spieler2 = spieler2;
+        Player spieler11 = spieler1;
+        Player spieler21 = spieler2;
 
         if (spieler2.getPlayertype() == PlayerType.COMPUTER){
             this.istvscomputer = true;
@@ -16,16 +14,11 @@ public class ZugController {
         this.schwarzistdran = true;
     }
 
-    public boolean getturn(){
+    public boolean getTurn(){
         return schwarzistdran;
     }
 
-    public void changeturn(){
-        if (schwarzistdran == true) {
-            this.schwarzistdran = false;
-        }
-        else {
-            this.schwarzistdran = true;
-        }
+    public void changeTurn(){
+      this.schwarzistdran = !schwarzistdran;
     }
 }

@@ -4,20 +4,18 @@ import besino.gamebord.GameBord;
 import besino.spielerZeugs.Player;
 import besino.spielerZeugs.PlayerType;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
 
-public class MenuRegister extends Parent {
+class MenuRegister extends Parent {
 
-    final int offset = 380;
+    private final int offset = 380;
     private GameBord gameBord;
 
-    public MenuRegister(){
+    MenuRegister(){
         VBox menu0 = new VBox(10);
         VBox menu1 = new VBox(10);
 
@@ -34,9 +32,7 @@ public class MenuRegister extends Parent {
         });
 
         MenuButton btnQuit = new MenuButton("Quit Game");
-        btnQuit.setOnMouseClicked(event -> {
-            System.exit(0);
-        });
+        btnQuit.setOnMouseClicked(event -> System.exit(0));
 
         MenuButton btnVsComputer = new MenuButton("vs Computer Mode");
         btnVsComputer.setOnMouseClicked(event -> {

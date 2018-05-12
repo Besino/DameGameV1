@@ -37,6 +37,7 @@ public class GameMenu extends Application {
         scene = new Scene(root);
 
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Unicorn Dame");
         primaryStage.show();
 
     }
