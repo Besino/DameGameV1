@@ -21,4 +21,6 @@ public class ZugController {
     public void changeTurn(){
       this.schwarzistdran = !schwarzistdran;
     }
+
+    public boolean vsComputer(){ return istvscomputer; }
 }

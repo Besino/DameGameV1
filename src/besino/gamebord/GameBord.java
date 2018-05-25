@@ -1,6 +1,7 @@
 package besino.gamebord;
 
 import besino.gamemenu.MenuButton;
+import besino.spielerZeugs.Computer;
 import besino.spielerZeugs.Player;
 import besino.spielerZeugs.ZugController;
 import besino.spielzugRules.ZugResultat;
@@ -19,20 +20,20 @@ public class GameBord extends Parent {
     private Group spielsteinweissGroup = new Group();
     private Group spielsteinschwarzGroup = new Group();
     private GameFeld[][] brett = new GameFeld[WIDTH][HEIGHT];
-    private Player player1;
-    private Player player2;
     private ZugController playcontrol;
     private Rules rulecheck;
+    private Computer computer;
 
     public GameBord(Player player1, Player player2){
 
-        this.player1 = player1;
-        this.player2 = player2;
         this.rulecheck = new Rules(this);
 
         setUpSpiel();
         getChildren().addAll(gamefeldGroup,spielsteinweissGroup, spielsteinschwarzGroup);
         playcontrol = new ZugController(player1, player2);
+        if (playcontrol.vsComputer()){
+            this.computer = new Computer(this);
+        }
     }
 
     private Spielstein erstelleSpielstein(SteinTyp type, int x, int y){
@@ -209,5 +210,8 @@ public class GameBord extends Parent {
 
             getChildren().addAll(winnerbox);
         }
+    }
+    public Group getSpielsteinweissGroup(){
+        return spielsteinweissGroup;
     }
 }
