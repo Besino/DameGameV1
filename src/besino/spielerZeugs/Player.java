@@ -8,9 +8,8 @@ public class Player {
         this.playertype = playertype;
     }
 
-    PlayerType getPlayertype() {
+    public PlayerType getPlayertype() {
         return playertype;
     }
-
 
 }

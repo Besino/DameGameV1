@@ -15,15 +15,15 @@ class GameFeld extends Rectangle {
         setFill(farbe ? Color.valueOf("#000000") : Color.valueOf("FF00FF"));
     }
 
-    boolean hatStein(){
+    public boolean hatStein(){
         return spielstein != null;
     }
 
-    Spielstein getSpielstein(){
+    public Spielstein getSpielstein(){
         return spielstein;
     }
 
-    void setSpielstein(Spielstein spielstein){
+    public void setSpielstein(Spielstein spielstein){
         this.spielstein = spielstein;
     }
 }
