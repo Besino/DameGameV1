@@ -2,12 +2,10 @@ package besino.spielzugRules;
 
 public enum ZugTyp {
     KEIN,
-    NORMALWEISS,
-    NORMALSCHWARZ,
+    NORMAL,
     KILL,
     WANDLEDAMEWEISS,
     WANDLEDAMESCHWARZ,
     KILLUNDWANDLEWEISS,
     KILLUNDWANDLESCHWARZ,
-    DAMEWEISSNORMAL,
 }

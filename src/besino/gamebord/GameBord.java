@@ -22,7 +22,6 @@ public class GameBord extends Parent {
     private GameFeld[][] brett = new GameFeld[WIDTH][HEIGHT];
     private ZugController playcontrol;
     private Rules rulecheck;
-    private Computer computer;
 
     public GameBord(Player player1, Player player2){
 
@@ -31,9 +30,7 @@ public class GameBord extends Parent {
         setUpSpiel();
         getChildren().addAll(gamefeldGroup,spielsteinweissGroup, spielsteinschwarzGroup);
         playcontrol = new ZugController(player1, player2);
-        if (playcontrol.vsComputer()){
-            this.computer = new Computer(this);
-        }
+
     }
 
     private Spielstein erstelleSpielstein(SteinTyp type, int x, int y){
@@ -49,17 +46,10 @@ public class GameBord extends Parent {
             int y0 = zuBrett(spielstein.getOldY());
 
             switch (resultat.getZugTyp()){
-
                 case KEIN:
                     spielstein.doNotMove();
                     break;
-                case NORMALWEISS:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    brett[newX][newY].setSpielstein(spielstein);
-                    playcontrol.changeTurn();
-                    break;
-                case NORMALSCHWARZ:
+                case NORMAL:
                     spielstein.move(newX,newY);
                     brett[x0][y0].setSpielstein(null);
                     brett[newX][newY].setSpielstein(spielstein);
@@ -124,12 +114,8 @@ public class GameBord extends Parent {
                     pruefeSieg();
                     playcontrol.changeTurn();
                     break;
-                case DAMEWEISSNORMAL:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    brett[newX][newY].setSpielstein(spielstein);
-                    playcontrol.changeTurn();
-
+                default:
+                    break;
             }
         });
 
