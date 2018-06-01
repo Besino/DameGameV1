@@ -73,4 +73,32 @@ public class Spielstein extends StackPane {
 
         getChildren().addAll(ellipse);
     }
+
+    public boolean istWeiss (){
+        if (this.getSteinTyp() == SteinTyp.WEISS || (this.getSteinTyp() == SteinTyp.DAMEWEISS)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean istSchwarz (){
+        if (this.getSteinTyp() == SteinTyp.SCHWARZ || (this.getSteinTyp() == SteinTyp.DAMESCHWARZ)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean istDameWeiss(){
+        if (this.getSteinTyp() == SteinTyp.DAMEWEISS){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }

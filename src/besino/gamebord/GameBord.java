@@ -174,7 +174,6 @@ public class GameBord extends Parent {
     }
     private void pruefeSieg(){
         if(spielsteinschwarzGroup.getChildren().isEmpty()){
-            System.out.println("Weiss Gewinnt das Spiel");
             VBox winnerbox = new VBox(10);
             winnerbox.setTranslateX(70);
             winnerbox.setTranslateY(250);
@@ -193,7 +192,6 @@ public class GameBord extends Parent {
 
         }
         if(spielsteinweissGroup.getChildren().isEmpty()){
-            System.out.println("Schwarz Gewinnt das Spiel");
 
             VBox winnerbox = new VBox(10);
             winnerbox.setTranslateX(70);
