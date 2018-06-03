@@ -29,11 +29,11 @@ public class GameBord extends Parent {
 
         setUpSpiel();
         getChildren().addAll(gamefeldGroup,spielsteinweissGroup, spielsteinschwarzGroup);
-        playcontrol = new ZugController(player1, player2);
+        playcontrol = new ZugController(this, player2);
 
     }
 
-    private Spielstein erstelleSpielstein(SteinTyp type, int x, int y){
+    public Spielstein erstelleSpielstein(SteinTyp type, int x, int y){
         Spielstein spielstein = new Spielstein(type, x, y);
 
         spielstein.setOnMouseReleased(event ->{

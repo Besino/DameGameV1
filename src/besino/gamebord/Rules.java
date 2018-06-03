@@ -23,10 +23,13 @@ public class Rules {
         int x0 = gamebord.zuBrett(spielstein.getOldX());
         int y0 = gamebord.zuBrett(spielstein.getOldY());
 
-        checkAndReturnWhiteRules(newX,newY,x0,y0,spielstein);
-        checkAndReturnBlackRules(newX,newY,x0,y0,spielstein);
+        ZugResultat resultat;
 
-        return new ZugResultat(ZugTyp.KEIN);
+        resultat = checkAndReturnWhiteRules(newX,newY,x0,y0,spielstein);
+        if (resultat.getZugTyp() == ZugTyp.KEIN){
+            resultat = checkAndReturnBlackRules(newX,newY,x0,y0,spielstein);
+        }
+        return new ZugResultat(resultat.getZugTyp());
     }
 
 

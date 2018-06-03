@@ -48,7 +48,7 @@ public class Spielstein extends StackPane {
         relocate(oldX,oldY);
     }
 
-    SteinTyp getSteinTyp(){
+    public SteinTyp getSteinTyp(){
         return steinTyp;
     }
 
