@@ -48,7 +48,8 @@ public class Rules {
                         return new ZugResultat(ZugTyp.KILLUNDWANDLEWEISS, gamebord.getBrett()[x1][y1].getSpielstein());
                     }
                 } else if (checkIfKillzug(newX,newY,x0,y0,spielstein)) {
-                    returnKillzug(newX, newY, x0, y0, spielstein);
+                    return new ZugResultat(returnKillzug(newX, newY, x0, y0, spielstein).getZugTyp(),
+                            returnKillzug(newX,newY,x0,y0,spielstein).getSpielstein());
                 }
                 else if (spielstein.istDameWeiss() && (Math.abs(newX - x0) == 1)) {
                     return new ZugResultat(ZugTyp.NORMAL);
@@ -72,7 +73,8 @@ public class Rules {
                 } else if ((y0 == 1) && checkIfNormalzug(newX, newY, x0, y0, spielstein)) {
                     return new ZugResultat(ZugTyp.WANDLEDAMESCHWARZ);
                 } else if (checkIfKillzug(newX,newY,x0,y0,spielstein)) {
-                    returnKillzug(newX, newY, x0, y0, spielstein);
+                    return new ZugResultat(returnKillzug(newX, newY, x0, y0, spielstein).getZugTyp(),
+                            returnKillzug(newX, newY, x0, y0,spielstein).getSpielstein());
                 }
             }
             return new ZugResultat(ZugTyp.KEIN);
