@@ -3,7 +3,9 @@ package besino.gamebord;
 import besino.gamemenu.MenuButton;
 import besino.spielerZeugs.Computer;
 import besino.spielerZeugs.Player;
+import besino.spielerZeugs.PlayerType;
 import besino.spielerZeugs.ZugController;
+import besino.spielzugRules.ZugComputer;
 import besino.spielzugRules.ZugResultat;
 import besino.winnermessage.WinnerMessageBox;
 import javafx.scene.Group;
@@ -22,6 +24,7 @@ public class GameBord extends Parent {
     private GameFeld[][] brett = new GameFeld[WIDTH][HEIGHT];
     private ZugController playcontrol;
     private Rules rulecheck;
+    private Player compcheck;
 
     public GameBord(Player player1, Player player2){
 
@@ -30,97 +33,180 @@ public class GameBord extends Parent {
         setUpSpiel();
         getChildren().addAll(gamefeldGroup,spielsteinweissGroup, spielsteinschwarzGroup);
         playcontrol = new ZugController(this, player2);
+        this.compcheck = player2;
 
     }
 
     public Spielstein erstelleSpielstein(SteinTyp type, int x, int y){
         Spielstein spielstein = new Spielstein(type, x, y);
+            spielstein.setOnMouseReleased(event -> {
+                int newX = zuBrett(spielstein.getLayoutX());
+                int newY = zuBrett(spielstein.getLayoutY());
 
-        spielstein.setOnMouseReleased(event ->{
-            int newX = zuBrett(spielstein.getLayoutX());
-            int newY = zuBrett(spielstein.getLayoutY());
+                ZugResultat resultat = rulecheck.tryMove(spielstein, newX, newY);
 
-            ZugResultat resultat = rulecheck.tryMove(spielstein,newX,newY);
+                int x0 = zuBrett(spielstein.getOldX());
+                int y0 = zuBrett(spielstein.getOldY());
 
-            int x0 = zuBrett(spielstein.getOldX());
-            int y0 = zuBrett(spielstein.getOldY());
+                switch (resultat.getZugTyp()) {
+                    case KEIN:
+                        spielstein.doNotMove();
+                        break;
+                    case NORMAL:
+                        spielstein.move(newX, newY);
+                        brett[x0][y0].setSpielstein(null);
+                        brett[newX][newY].setSpielstein(spielstein);
+                        playcontrol.changeTurn();
+                        break;
+                    case KILL:
+                        spielstein.move(newX, newY);
+                        brett[x0][y0].setSpielstein(null);
+                        brett[newX][newY].setSpielstein(spielstein);
 
-            switch (resultat.getZugTyp()){
-                case KEIN:
-                    spielstein.doNotMove();
-                    break;
-                case NORMAL:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    brett[newX][newY].setSpielstein(spielstein);
-                    playcontrol.changeTurn();
-                    break;
-                case KILL:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    brett[newX][newY].setSpielstein(spielstein);
+                        Spielstein gegnerStein = resultat.getSpielstein();
+                        brett[zuBrett(gegnerStein.getOldX())][zuBrett(gegnerStein.getOldY())].setSpielstein(null);
+                        if (gegnerStein.getSteinTyp() == SteinTyp.WEISS || gegnerStein.getSteinTyp() == SteinTyp.DAMEWEISS) {
+                            spielsteinweissGroup.getChildren().remove(gegnerStein);
+                        } else {
+                            spielsteinschwarzGroup.getChildren().remove(gegnerStein);
+                        }
+                        pruefeSieg();
+                        playcontrol.changeTurn();
+                        break;
+                    case WANDLEDAMEWEISS:
+                        spielstein.move(newX, newY);
+                        brett[x0][y0].setSpielstein(null);
+                        Spielstein damensteinweiss = erstelleSpielstein(SteinTyp.DAMEWEISS, newX, newY);
+                        brett[newX][newY].setSpielstein(damensteinweiss);
+                        spielsteinweissGroup.getChildren().remove(spielstein);
+                        spielsteinweissGroup.getChildren().add(damensteinweiss);
+                        playcontrol.changeTurn();
+                        break;
+                    case KILLUNDWANDLEWEISS:
+                        spielstein.move(newX, newY);
+                        brett[x0][y0].setSpielstein(null);
+                        Spielstein dameweiss = erstelleSpielstein(SteinTyp.DAMEWEISS, newX, newY);
+                        Spielstein gegnerStein2 = resultat.getSpielstein();
+                        brett[zuBrett(gegnerStein2.getOldX())][zuBrett(gegnerStein2.getOldY())].setSpielstein(null);
+                        brett[newX][newY].setSpielstein(dameweiss);
+                        spielsteinweissGroup.getChildren().remove(spielstein);
+                        spielsteinweissGroup.getChildren().add(dameweiss);
+                        spielsteinschwarzGroup.getChildren().remove(gegnerStein2);
+                        pruefeSieg();
+                        playcontrol.changeTurn();
+                        break;
+                    case WANDLEDAMESCHWARZ:
+                        spielstein.move(newX, newY);
+                        brett[x0][y0].setSpielstein(null);
+                        Spielstein damensteinschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ, newX, newY);
+                        brett[newX][newY].setSpielstein(damensteinschwarz);
+                        spielsteinschwarzGroup.getChildren().remove(spielstein);
+                        spielsteinschwarzGroup.getChildren().add(damensteinschwarz);
+                        playcontrol.changeTurn();
+                        break;
+                    case KILLUNDWANDLESCHWARZ:
+                        spielstein.move(newX, newY);
+                        brett[x0][y0].setSpielstein(null);
+                        Spielstein dameschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ, newX, newY);
+                        Spielstein gegnerStein3 = resultat.getSpielstein();
+                        brett[zuBrett(gegnerStein3.getOldX())][zuBrett(gegnerStein3.getOldY())].setSpielstein(null);
+                        brett[newX][newY].setSpielstein(dameschwarz);
+                        spielsteinschwarzGroup.getChildren().remove(spielstein);
+                        spielsteinschwarzGroup.getChildren().add(dameschwarz);
+                        spielsteinweissGroup.getChildren().remove(gegnerStein3);
+                        pruefeSieg();
+                        playcontrol.changeTurn();
+                        break;
+                    default:
+                        break;
+                }
+            });
 
-                    Spielstein gegnerStein = resultat.getSpielstein();
-                    brett[zuBrett(gegnerStein.getOldX())][zuBrett(gegnerStein.getOldY())].setSpielstein(null);
-                    if(gegnerStein.getSteinTyp() == SteinTyp.WEISS || gegnerStein.getSteinTyp() == SteinTyp.DAMEWEISS){
-                    spielsteinweissGroup.getChildren().remove(gegnerStein);}
-                    else {
-                    spielsteinschwarzGroup.getChildren().remove(gegnerStein);
-                    }
-                    pruefeSieg();
-                    playcontrol.changeTurn();
-                    break;
-                case WANDLEDAMEWEISS:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    Spielstein damensteinweiss = erstelleSpielstein(SteinTyp.DAMEWEISS,newX,newY);
-                    brett[newX][newY].setSpielstein(damensteinweiss);
-                    spielsteinweissGroup.getChildren().remove(spielstein);
-                    spielsteinweissGroup.getChildren().add(damensteinweiss);
-                    playcontrol.changeTurn();
-                    break;
-                case KILLUNDWANDLEWEISS:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    Spielstein dameweiss = erstelleSpielstein(SteinTyp.DAMEWEISS,newX,newY);
-                    Spielstein gegnerStein2 = resultat.getSpielstein();
-                    brett[zuBrett(gegnerStein2.getOldX())][zuBrett(gegnerStein2.getOldY())].setSpielstein(null);
-                    brett[newX][newY].setSpielstein(dameweiss);
-                    spielsteinweissGroup.getChildren().remove(spielstein);
-                    spielsteinweissGroup.getChildren().add(dameweiss);
-                    spielsteinschwarzGroup.getChildren().remove(gegnerStein2);
-                    pruefeSieg();
-                    playcontrol.changeTurn();
-                    break;
-                case WANDLEDAMESCHWARZ:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    Spielstein damensteinschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ,newX,newY);
-                    brett[newX][newY].setSpielstein(damensteinschwarz);
-                    spielsteinschwarzGroup.getChildren().remove(spielstein);
-                    spielsteinschwarzGroup.getChildren().add(damensteinschwarz);
-                    playcontrol.changeTurn();
-                    break;
-                case KILLUNDWANDLESCHWARZ:
-                    spielstein.move(newX,newY);
-                    brett[x0][y0].setSpielstein(null);
-                    Spielstein dameschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ,newX,newY);
-                    Spielstein gegnerStein3 = resultat.getSpielstein();
-                    brett[zuBrett(gegnerStein3.getOldX())][zuBrett(gegnerStein3.getOldY())].setSpielstein(null);
-                    brett[newX][newY].setSpielstein(dameschwarz);
-                    spielsteinschwarzGroup.getChildren().remove(spielstein);
-                    spielsteinschwarzGroup.getChildren().add(dameschwarz);
-                    spielsteinweissGroup.getChildren().remove(gegnerStein3);
-                    pruefeSieg();
-                    playcontrol.changeTurn();
-                    break;
-                default:
-                    break;
-            }
-        });
+            return spielstein;
 
-        return spielstein;
     }
+
+    public void doCompZug(ZugComputer compZug) {
+
+        Spielstein spielstein = new Spielstein(compZug.getSpielstein().getSteinTyp(), compZug.getOldX(), compZug.getOldY());
+        ZugResultat resultat = rulecheck.tryMove(spielstein, compZug.getNewX(), compZug.getNewY());
+        int x0 = compZug.getOldX();
+        int y0 = compZug.getOldY();
+
+        switch (resultat.getZugTyp()) {
+            case KEIN:
+                spielstein.doNotMove();
+                break;
+            case NORMAL:
+                spielstein.move(compZug.getNewX(), compZug.getNewY());
+                brett[x0][y0].setSpielstein(null);
+                brett[compZug.getNewX()][compZug.getNewY()].setSpielstein(spielstein);
+                playcontrol.changeTurn();
+                break;
+            case KILL:
+                spielstein.move(compZug.getNewX(), compZug.getNewY());
+                brett[x0][y0].setSpielstein(null);
+                brett[compZug.getNewX()][compZug.getNewY()].setSpielstein(spielstein);
+
+                Spielstein gegnerStein = resultat.getSpielstein();
+                brett[zuBrett(gegnerStein.getOldX())][zuBrett(gegnerStein.getOldY())].setSpielstein(null);
+                if (gegnerStein.getSteinTyp() == SteinTyp.WEISS || gegnerStein.getSteinTyp() == SteinTyp.DAMEWEISS) {
+                    spielsteinweissGroup.getChildren().remove(gegnerStein);
+                } else {
+                    spielsteinschwarzGroup.getChildren().remove(gegnerStein);
+                }
+                pruefeSieg();
+                playcontrol.changeTurn();
+                break;
+            case WANDLEDAMEWEISS:
+                spielstein.move(compZug.getNewX(), compZug.getNewY());
+                brett[x0][y0].setSpielstein(null);
+                Spielstein damensteinweiss = erstelleSpielstein(SteinTyp.DAMEWEISS, compZug.getNewX(), compZug.getNewY());
+                brett[compZug.getNewX()][compZug.getNewY()].setSpielstein(damensteinweiss);
+                spielsteinweissGroup.getChildren().remove(spielstein);
+                spielsteinweissGroup.getChildren().add(damensteinweiss);
+                playcontrol.changeTurn();
+                break;
+            case KILLUNDWANDLEWEISS:
+                spielstein.move(compZug.getNewX(), compZug.getNewY());
+                brett[x0][y0].setSpielstein(null);
+                Spielstein dameweiss = erstelleSpielstein(SteinTyp.DAMEWEISS, compZug.getNewX(), compZug.getNewY());
+                Spielstein gegnerStein2 = resultat.getSpielstein();
+                brett[zuBrett(gegnerStein2.getOldX())][zuBrett(gegnerStein2.getOldY())].setSpielstein(null);
+                brett[compZug.getNewX()][compZug.getNewY()].setSpielstein(dameweiss);
+                spielsteinweissGroup.getChildren().remove(spielstein);
+                spielsteinweissGroup.getChildren().add(dameweiss);
+                spielsteinschwarzGroup.getChildren().remove(gegnerStein2);
+                pruefeSieg();
+                playcontrol.changeTurn();
+                break;
+            case WANDLEDAMESCHWARZ:
+                spielstein.move(compZug.getNewX(), compZug.getNewY());
+                brett[x0][y0].setSpielstein(null);
+                Spielstein damensteinschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ, compZug.getNewX(), compZug.getNewY());
+                brett[compZug.getNewX()][compZug.getNewY()].setSpielstein(damensteinschwarz);
+                spielsteinschwarzGroup.getChildren().remove(spielstein);
+                spielsteinschwarzGroup.getChildren().add(damensteinschwarz);
+                playcontrol.changeTurn();
+                break;
+            case KILLUNDWANDLESCHWARZ:
+                spielstein.move(compZug.getNewX(), compZug.getNewY());
+                brett[x0][y0].setSpielstein(null);
+                Spielstein dameschwarz = erstelleSpielstein(SteinTyp.DAMESCHWARZ, compZug.getNewX(), compZug.getNewY());
+                Spielstein gegnerStein3 = resultat.getSpielstein();
+                brett[zuBrett(gegnerStein3.getOldX())][zuBrett(gegnerStein3.getOldY())].setSpielstein(null);
+                brett[compZug.getNewX()][compZug.getNewY()].setSpielstein(dameschwarz);
+                spielsteinschwarzGroup.getChildren().remove(spielstein);
+                spielsteinschwarzGroup.getChildren().add(dameschwarz);
+                spielsteinweissGroup.getChildren().remove(gegnerStein3);
+                pruefeSieg();
+                playcontrol.changeTurn();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     public GameFeld[][] getBrett() {
         return brett;

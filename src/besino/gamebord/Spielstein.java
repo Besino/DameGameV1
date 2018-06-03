@@ -56,8 +56,16 @@ public class Spielstein extends StackPane {
         return oldX;
     }
 
+    public int getX(){
+        return (int)(getOldX()/FELD_GROESSE);
+    }
+
     double getOldY(){
         return oldY;
+    }
+
+    public int getY(){
+        return (int) (getOldY()/FELD_GROESSE);
     }
 
     void doNotMove(){ relocate(oldX,oldY);}

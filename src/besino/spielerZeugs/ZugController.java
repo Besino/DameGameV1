@@ -13,6 +13,7 @@ public class ZugController {
             this.istvscomputer = true;
             computer = new Computer(gameBord);
         }
+
         this.schwarzistdran = true;
     }
 
@@ -21,10 +22,12 @@ public class ZugController {
     }
 
     public void changeTurn(){
-        if (istvscomputer){
+        this.schwarzistdran = !schwarzistdran;
+
+        if (istvscomputer && !schwarzistdran){
             computer.spieleRandomZug();
         }
-        this.schwarzistdran = !schwarzistdran;
+
     }
 
     public boolean vsComputer(){ return istvscomputer; }
