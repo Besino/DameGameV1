@@ -128,7 +128,7 @@ public class GameBord extends Parent {
 
     public void doCompZug(ZugComputer compZug) {
 
-        Spielstein spielstein = new Spielstein(compZug.getSpielstein().getSteinTyp(), compZug.getOldX(), compZug.getOldY());
+        Spielstein spielstein = compZug.getSpielstein();
         ZugResultat resultat = rulecheck.tryMove(spielstein, compZug.getNewX(), compZug.getNewY());
         int x0 = compZug.getOldX();
         int y0 = compZug.getOldY();
